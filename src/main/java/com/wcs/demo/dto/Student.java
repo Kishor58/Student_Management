@@ -1,9 +1,9 @@
 package com.wcs.demo.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 
@@ -15,6 +15,21 @@ public class Student {
     private String name;
     private String email;
     private long contact;
+
+    @ManyToMany
+    @JoinTable(name="student_course",
+    joinColumns = @JoinColumn(name="id"),
+    inverseJoinColumns = @JoinColumn(name="courseId"))
+    @JsonBackReference
+    private List<Course> courses;
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
 
     public long getId() {
         return id;

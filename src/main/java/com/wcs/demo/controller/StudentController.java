@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/students")
@@ -31,10 +32,14 @@ public class StudentController {
         return service.getAllStudents();
     }
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Student> findByID(@PathVariable("id") long id) {
-        return service.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> findByID(@PathVariable("id") long id) {
+        Optional<Student> student=service.findById(id);
+        if(!student.isPresent()){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Sorry with this ID  i don't have any student data !");
+        }
+        return ResponseEntity.ok(student.get());
     }
 
     @PutMapping("/update/{id}")
@@ -73,5 +78,11 @@ public class StudentController {
                     .body("This Page is not available put same lower page number");
         }
         return ResponseEntity.ok(resultPage);
+    }
+
+    @PostMapping("{studentId}/courses/{courseId}")
+    public ResponseEntity<Student> addCourse(@PathVariable Long studentId,@PathVariable Long courseId){
+        Student updateStudent= service.addCourse(studentId,courseId);
+        return ResponseEntity.ok(updateStudent);
     }
 }

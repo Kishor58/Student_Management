@@ -1,6 +1,8 @@
 package com.wcs.demo.service;
 
+import com.wcs.demo.dto.Course;
 import com.wcs.demo.dto.Student;
+import com.wcs.demo.repository.CourseRepository;
 import com.wcs.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,41 +16,44 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
     @Autowired
-    private StudentRepository repository;
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
 
     public Student save(Student s){
-        return repository.save(s);
+        return studentRepository.save(s);
     }
 
     public List<Student> getAllStudents(){
-        return repository.findAll();
+        return studentRepository.findAll();
     }
 
     public Optional<Student> findById(long id){
-        return repository.findById(id);
+        return studentRepository.findById(id);
     }
 
     public Optional<Student> updatestudent(long id,Student newData){
-        return repository.findById(id)
+        return studentRepository.findById(id)
                 .map(student->{
                     student.setName(newData.getName());
                     student.setEmail(newData.getEmail());
                     student.setContact(newData.getContact());
-                    return repository.save(student);
+                    return studentRepository.save(student);
                 });
     }
 
     public boolean deleteById(Long id){
-        if(repository.existsById(id)){
-            repository.deleteById(id);
+        if(studentRepository.existsById(id)){
+            studentRepository.deleteById(id);
             return true;
         }
         return false;
     }
 
     public List<Student> search(String keyword) {
-        List<Student> allStudents = repository.findAll();
+        List<Student> allStudents = studentRepository.findAll();
 
         return allStudents.stream()
                 .filter(student ->
@@ -60,13 +65,25 @@ public class StudentService {
                 ).collect(Collectors.toList());
     }
     public List<Student> searchBySql(String keyword){
-        List<Student> student=repository.searchByKeyword(keyword);
+        List<Student> student=studentRepository.searchByKeyword(keyword);
         return student;
     }
 
     public Page<Student> searchByKeyword(String keyword, Pageable pageable){
-        return repository.searchByKeyword(keyword,pageable);
+        return studentRepository.searchByKeyword(keyword,pageable);
     }
+
+    public Student addCourse(Long studentId,Long courseId){
+        Student student=studentRepository.findById(studentId).orElseThrow(()-> new RuntimeException("Student Id not found "));
+        Course course=courseRepository.findById(courseId).orElseThrow(()->new RuntimeException("Course Id not found"));
+
+        student.getCourses().add(course);
+        course.getStudent().add(student);
+
+        courseRepository.save(course);
+        return studentRepository.save(student);
+    }
+
 
 
 
