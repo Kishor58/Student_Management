@@ -65,23 +65,28 @@ public class StudentService {
                 ).collect(Collectors.toList());
     }
     public List<Student> searchBySql(String keyword){
-        List<Student> student=studentRepository.searchByKeyword(keyword);
-        return student;
+        return studentRepository.searchByKeyword(keyword);
     }
 
     public Page<Student> searchByKeyword(String keyword, Pageable pageable){
         return studentRepository.searchByKeyword(keyword,pageable);
     }
 
-    public Student addCourse(Long studentId,Long courseId){
+    public String addCourse(Long studentId,Long courseId){
         Student student=studentRepository.findById(studentId).orElseThrow(()-> new RuntimeException("Student Id not found "));
         Course course=courseRepository.findById(courseId).orElseThrow(()->new RuntimeException("Course Id not found"));
 
+        if(student.getCourses().contains(course)){
+            return "This student is already enrolled in the course: " + course.getCourseName();
+        }
         student.getCourses().add(course);
         course.getStudent().add(student);
 
         courseRepository.save(course);
-        return studentRepository.save(student);
+        studentRepository.save(student);
+
+        return "Student enrolled successfully in the course: " + course.getCourseName();
+
     }
 
 

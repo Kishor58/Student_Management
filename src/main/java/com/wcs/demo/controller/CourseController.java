@@ -37,8 +37,8 @@ public class CourseController {
     }
 
     @GetMapping("/{courseId}/student/{studentId}")
-    public ResponseEntity<Course> addStudent(@PathVariable Long studentId,@PathVariable Long courseId){
-        Course updateCourse= service.addStudent(studentId,courseId);
+    public ResponseEntity<String> addStudent(@PathVariable Long studentId,@PathVariable Long courseId){
+        String updateCourse= service.addStudent(studentId,courseId);
         return ResponseEntity.ok(updateCourse);
     }
 

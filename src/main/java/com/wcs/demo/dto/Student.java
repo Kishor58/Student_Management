@@ -20,7 +20,6 @@ public class Student {
     @JoinTable(name="student_course",
     joinColumns = @JoinColumn(name="id"),
     inverseJoinColumns = @JoinColumn(name="courseId"))
-    @JsonBackReference
     private List<Course> courses;
 
     public List<Course> getCourses() {

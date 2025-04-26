@@ -22,10 +22,11 @@ public class StudentController {
     @Autowired
     private  StudentService service;
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = "application/json")
     public Student save(@RequestBody Student student) {
         return service.save(student);
     }
+
 
     @GetMapping("/getAllStudent")
     public List<Student> getAllStudent(){
@@ -81,8 +82,9 @@ public class StudentController {
     }
 
     @PostMapping("{studentId}/courses/{courseId}")
-    public ResponseEntity<Student> addCourse(@PathVariable Long studentId,@PathVariable Long courseId){
-        Student updateStudent= service.addCourse(studentId,courseId);
-        return ResponseEntity.ok(updateStudent);
+    public ResponseEntity<String> addCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
+        String message = service.addCourse(studentId, courseId);
+        return ResponseEntity.ok(message);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.wcs.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class Course {
     private String courseName;
     private String description;
     @ManyToMany(mappedBy = "courses")
-    @JsonManagedReference
+    @JsonIgnore
     private List<Student> student;
 
     public long getCourseId() {

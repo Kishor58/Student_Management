@@ -31,14 +31,18 @@ public class CourseService {
         return courseRepository.findById(id);
     }
 
-    public Course addStudent(Long studentId, Long courseId){
+    public String addStudent(Long studentId, Long courseId){
         Student student=studentRepository.findById(studentId).orElseThrow(()->new RuntimeException("Student Id Not found"));
         Course course=courseRepository.findById(courseId).orElseThrow(()->new RuntimeException("Course ID not found"));
 
+        if(student.getCourses().contains(course)){
+            return "Student has already enrolled in this course ";
+        }
         course.getStudent().add(student);
         student.getCourses().add(course);
 
         studentRepository.save(student);
-        return courseRepository.save(course);
+        courseRepository.save(course);
+        return course.getCourseName()+":"+" Course to Enrolled to "+student.getName();
     }
 }
