@@ -3,11 +3,11 @@ package com.wcs.demo.controller;
 import com.wcs.demo.Exception.CollegeNotFoundException;
 import com.wcs.demo.dto.College;
 import com.wcs.demo.dto.Student;
-import com.wcs.demo.dto.University;
 import com.wcs.demo.service.CollegeService;
 import com.wcs.demo.service.StudentService;
 import com.wcs.demo.service.UniversityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,12 +42,17 @@ public class CollegeController {
         return ResponseEntity.ok(college);
     }
 
-
-
     @PutMapping("/{id}")
-    public College update(@PathVariable Long id, @RequestBody College college) {
-        return collegeService.updateCollege(id, college);
+    public ResponseEntity<College> update(@PathVariable Long id, @RequestBody College college) {
+        College updatedCollege = collegeService.updateCollege(id, college);
+
+        if (updatedCollege != null) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedCollege);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

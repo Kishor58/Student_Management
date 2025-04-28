@@ -17,7 +17,7 @@ public class GlobleExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 ex.getMessage(),
-                "With this college Id there is not any college register !"
+                "With this college Id there is not any college register !   "
         );
 
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);

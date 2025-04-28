@@ -1,0 +1,122 @@
+
+# 📘 Exception Handling in Spring Boot
+
+## 1. **What is Exception Handling?**
+
+- **Exception Handling** means **catching errors** in your application and **responding properly**.
+- In Spring Boot, if you don’t handle exceptions, it shows **ugly errors** (stack traces) to the user.
+- Good practice is to send **clean, meaningful error messages** (like "College not found", not big technical logs).
+
+---
+
+## 2. **How to Do Exception Handling in Spring Boot**
+
+### ➔ Step 1: Create a Custom Exception Class
+
+This represents a **specific** error you want to handle.
+
+package com.wcs.demo.Exception;
+
+public class CollegeNotFoundException extends RuntimeException {
+    public CollegeNotFoundException(String message) {
+        super(message);
+    }
+}
+```
+
+### ➔ Step 2: Create a Custom Error Response Class
+
+This class **formats** the error response properly.
+
+package com.wcs.demo.ErrorResponse;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ErrorResponse {
+    private LocalDateTime timestamp;
+    private String message;
+    private String details;
+}
+
+✅ `timestamp` – when error occurred
+✅ `message` – what error happened
+✅ `details` – where it happened
+
+---
+
+### ➔ Step 3: Create a Global Exception Handler Class
+
+This **catches** your exceptions globally (anywhere in the project).
+
+package com.wcs.demo.ExceptionHandler;
+
+import com.wcs.demo.ErrorResponse.ErrorResponse;
+import com.wcs.demo.Exception.CollegeNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(CollegeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCollegeNotFoundException(CollegeNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                "College Service"
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+}
+
+✅ `@RestControllerAdvice` makes this class global.
+✅ `@ExceptionHandler` catches the specified exception.
+
+---
+
+### ➔ Step 4: Throw the Exception From Service/Controller
+
+In your service layer or controller, **throw** your custom exception when needed.
+
+College college = collegeRepository.findById(id)
+        .orElseThrow(() -> new CollegeNotFoundException("College not found with ID " + id));
+
+
+## 3. **When this is done properly:**
+
+✅ Instead of 500 Internal Error with technical details,
+✅ User sees a **simple JSON error** like:
+
+```json
+{
+  "timestamp": "2025-04-28T15:34:10.123",
+  "message": "College not found with ID 4",
+  "details": "College Service"
+}
+```
+
+
+# 📋 Key Points
+
+- Always create custom exceptions for business logic errors.
+- Always return meaningful, clean error responses.
+- Avoid showing raw stack traces to users.
+- `@RestControllerAdvice` is powerful for global exception handling.
+- Maintain **standard structure** of error responses across your project.
+
+---
+
+Would you also like me to create a **Ready-Made Template** you can **copy-paste** into your every Spring Boot project for Exception Handling? 🚀
+It will save you tons of time later! 🎯  (Let me know!)

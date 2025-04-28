@@ -35,7 +35,7 @@ public class CollegeService {
                 .orElseThrow(() -> new CollegeNotFoundException("College not found with ID " + id));
     }
     public College updateCollege(Long id, College updated) {
-        College existing = getCollegeById(id);
+        College existing=collegeRepository.findById(id).orElseThrow(()->new CollegeNotFoundException("College Not found with this :"+id));
         existing.setCollegeName(updated.getCollegeName());
         existing.setLocation(updated.getLocation());
         existing.setUniversity(updated.getUniversity());
