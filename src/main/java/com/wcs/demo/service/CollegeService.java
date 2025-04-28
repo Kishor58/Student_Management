@@ -1,10 +1,14 @@
 package com.wcs.demo.service;
 
+import com.wcs.demo.Exception.CollegeNotFoundException;
 import com.wcs.demo.dto.College;
 import com.wcs.demo.dto.University;
 import com.wcs.demo.repository.CollegeRepository;
 import com.wcs.demo.repository.UniversityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,9 +32,8 @@ public class CollegeService {
 
     public College getCollegeById(Long id) {
         return collegeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("College not found"));
+                .orElseThrow(() -> new CollegeNotFoundException("College not found with ID " + id));
     }
-
     public College updateCollege(Long id, College updated) {
         College existing = getCollegeById(id);
         existing.setCollegeName(updated.getCollegeName());

@@ -1,5 +1,6 @@
 package com.wcs.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,5 +15,6 @@ public class University {
     private String universityName;
     private String location ;
     @OneToMany(mappedBy = "university" ,cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<College> collegeList;
 }

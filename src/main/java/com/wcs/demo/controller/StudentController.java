@@ -27,7 +27,6 @@ public class StudentController {
         return service.save(student);
     }
 
-
     @GetMapping("/getAllStudent")
     public List<Student> getAllStudent(){
         return service.getAllStudents();
@@ -86,5 +85,11 @@ public class StudentController {
         String message = service.addCourse(studentId, courseId);
         return ResponseEntity.ok(message);
     }
+    @PostMapping("/{studentId}/college/{collegeId}")
+    public ResponseEntity<String> assignCollege(@PathVariable Long studentId, @PathVariable Long collegeId) {
+        String result = service.assignCollege(studentId, collegeId);
+        return ResponseEntity.ok(result);
+    }
+
 
 }

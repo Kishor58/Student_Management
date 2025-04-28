@@ -1,8 +1,10 @@
 package com.wcs.demo.service;
 
 import com.wcs.demo.dto.Course;
+import com.wcs.demo.dto.Faculty;
 import com.wcs.demo.dto.Student;
 import com.wcs.demo.repository.CourseRepository;
+import com.wcs.demo.repository.FacultyRepository;
 import com.wcs.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ public class CourseService {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private FacultyRepository facultyRepository;
 
     public Course addCourse(Course c){
         return courseRepository.save(c);
@@ -45,4 +50,15 @@ public class CourseService {
         courseRepository.save(course);
         return course.getCourseName()+":"+" Course to Enrolled to "+student.getName();
     }
+    public Course assignFacultyToCourse(Long courseId, Long facultyId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Faculty faculty = facultyRepository.findById(facultyId)
+                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+
+        course.setFaculty(faculty);
+        return courseRepository.save(course);
+    }
+
 }

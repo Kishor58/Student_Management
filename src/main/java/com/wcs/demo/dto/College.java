@@ -1,7 +1,10 @@
 package com.wcs.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -16,10 +19,11 @@ public class College {
     @JoinColumn(name = "University_Id")
     private University university;
 
-//    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL)
-//    private List<Department> departments;
-//
-//    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL)
-//    private List<Student> students;
+    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL)
+    private List<Department> departments;
+
+    @OneToMany(mappedBy = "college", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Student> students;
 
 }

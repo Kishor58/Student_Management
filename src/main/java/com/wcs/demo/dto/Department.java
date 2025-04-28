@@ -7,23 +7,22 @@ import java.util.List;
 
 @Entity
 @Data
-public class Student {
+public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
-    private String email;
-    private long contact;
+    private String code;
 
-    @ManyToMany
-    @JoinTable(name="student_course",
-    joinColumns = @JoinColumn(name="id"),
-    inverseJoinColumns = @JoinColumn(name="courseId"))
+    @OneToMany(mappedBy = "department")
     private List<Course> courses;
+
+    @OneToMany(mappedBy = "department")
+    private List<Faculty> faculties;
 
     @ManyToOne
     @JoinColumn(name = "college_id")
     private College college;
-
 }
+

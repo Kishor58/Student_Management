@@ -121,6 +121,25 @@ com.kishor.studentmanagement
 
 ---
 
+Relationships Summary:
+
+From Entity  | Relationship Type | To Entity  | Annotation used
+University   | One-to-Many       | College    | @OneToMany
+College      | Many-to-One       | University | @ManyToOne
+College      | One-to-Many       | Student    | @OneToMany
+Department   | One-to-Many       | Course     | @OneToMany
+Department   | One-to-Many       | Faculty    | @OneToMany
+Course       | Many-to-One       | Department | @ManyToOne
+Course       | Many-to-Many      | Student    | @ManyToMany
+Faculty      | Many-to-One       | Department | @ManyToOne
+Faculty      | One-to-Many       | Course     | @OneToMany
+Student      | Many-to-One       | College    | @ManyToOne
+Student      | One-to-One        | IDCard     | @OneToOne
+Student      | Many-to-Many      | Course     | @ManyToMany
+Student      | One-to-Many       | Grade      | @OneToMany
+Grade        | Many-to-One       | Student    | @ManyToOne
+Grade        | Many-to-One       | Course     | @ManyToOne
+
 For guidance on implementing any step, you can request code or walkthroughs per feature or module.
 
 ---

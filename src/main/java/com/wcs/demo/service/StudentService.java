@@ -1,7 +1,9 @@
 package com.wcs.demo.service;
 
+import com.wcs.demo.dto.College;
 import com.wcs.demo.dto.Course;
 import com.wcs.demo.dto.Student;
+import com.wcs.demo.repository.CollegeRepository;
 import com.wcs.demo.repository.CourseRepository;
 import com.wcs.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class StudentService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private CollegeRepository collegeRepository;
 
 
     public Student save(Student s){
@@ -87,6 +92,24 @@ public class StudentService {
 
         return "Student enrolled successfully in the course: " + course.getCourseName();
 
+    }
+    public String assignCollege(Long studentId, Long collegeId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        College college = collegeRepository.findById(collegeId)
+                .orElseThrow(() -> new RuntimeException("College not found"));
+
+        student.setCollege(college);
+        studentRepository.save(student);
+
+        return "College assigned to Student successfully!";
+    }
+    public List<Student> getStudentsByCollege(Long collegeId) {
+        return studentRepository.findAll()
+                .stream()
+                .filter(student -> student.getCollege() != null && student.getCollege().getCollegeId().equals(collegeId))
+                .collect(Collectors.toList());
     }
 
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Data
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,36 +24,11 @@ public class Course {
     @ManyToMany(mappedBy = "courses")
     @JsonIgnore
     private List<Student> student;
+    @ManyToOne
+    @JoinColumn(name = "faculty_Id")
+    private Faculty faculty;
+    @ManyToOne
+    @JoinColumn(name = "department_id"  )
+    private Department department;
 
-    public long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(long courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Student> getStudent() {
-        return student;
-    }
-
-    public void setStudent(List<Student> student) {
-        this.student = student;
-    }
 }
